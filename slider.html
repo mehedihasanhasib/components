@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PayerMax-Style Slider</title>
+  <!-- Import Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Import Splide CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/splidejs/4.1.4/css/splide.min.css">
+  <!-- Import Splide JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/splidejs/4.1.4/js/splide.min.js"></script>
+  <style>
+    .splide__pagination__page.is-active {
+      background: #3B82F6;
+      transform: scale(1.2);
+    }
+    
+    .splide__pagination__page {
+      background: #6B7280;
+      width: 2rem;
+      height: 0.25rem;
+      border-radius: 0;
+      margin: 0 0.25rem;
+    }
+    
+    .splide__arrow {
+      display: none;
+    }
+    
+    .hero-gradient {
+      background: linear-gradient(to right, rgba(10, 15, 30, 0.95), rgba(10, 15, 30, 0.8));
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <div class="w-full">
+    <section class="splide bg-gray-900 text-white">
+      <div class="splide__track">
+        <ul class="splide__list">
+          <!-- Slide 1 -->
+          <li class="splide__slide">
+            <div class="hero-gradient min-h-screen flex items-center">
+              <div class="container mx-auto px-4 py-16 grid md:grid-cols-2 gap-8">
+                <div class="flex flex-col justify-center">
+                  <h1 class="text-5xl md:text-6xl font-bold mb-6">Build a Global Payment Network Rooted in Emerging Markets</h1>
+                  <p class="text-xl mb-8 text-gray-300">Seamless cross-border payment solutions for businesses expanding globally</p>
+                  <div>
+                    <a href="#" class="inline-block bg-blue-500 text-white rounded-full px-8 py-3 hover:bg-blue-600">Contact Us</a>
+                  </div>
+                </div>
+                <div class="flex justify-center items-center">
+                  <div class="relative w-full h-96">
+                    <div class="absolute inset-0 rounded-full border-4 border-teal-400 opacity-50"></div>
+                    <div class="absolute inset-4 rounded-full overflow-hidden">
+                      <img src="https://placehold.co/600x600/001220/ffffff?text=World+Map" class="w-full h-full object-cover" alt="World Map">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <!-- Slide 2 -->
+          <li class="splide__slide">
+            <div class="hero-gradient min-h-screen flex items-center">
+              <div class="container mx-auto px-4 py-16 grid md:grid-cols-2 gap-8">
+                <div class="flex flex-col justify-center">
+                  <h1 class="text-5xl md:text-6xl font-bold mb-6">Optimize Your International Payment Strategy</h1>
+                  <p class="text-xl mb-8 text-gray-300">Reduce costs and increase acceptance rates with our local payment methods</p>
+                  <div>
+                    <a href="#" class="inline-block bg-blue-500 text-white rounded-full px-8 py-3 hover:bg-blue-600">Learn More</a>
+                  </div>
+                </div>
+                <div class="flex justify-center items-center">
+                  <div class="relative w-full h-96">
+                    <div class="absolute inset-0 rounded-full border-4 border-blue-400 opacity-50"></div>
+                    <div class="absolute inset-4 rounded-full overflow-hidden">
+                      <img src="https://placehold.co/600x600/001220/ffffff?text=Payment+Network" class="w-full h-full object-cover" alt="Payment Network">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <!-- Slide 3 -->
+          <li class="splide__slide">
+            <div class="hero-gradient min-h-screen flex items-center">
+              <div class="container mx-auto px-4 py-16 grid md:grid-cols-2 gap-8">
+                <div class="flex flex-col justify-center">
+                  <h1 class="text-5xl md:text-6xl font-bold mb-6">Unlock New Markets with Local Expertise</h1>
+                  <p class="text-xl mb-8 text-gray-300">Expand your business globally with our specialized payment solutions</p>
+                  <div>
+                    <a href="#" class="inline-block bg-blue-500 text-white rounded-full px-8 py-3 hover:bg-blue-600">Get Started</a>
+                  </div>
+                </div>
+                <div class="flex justify-center items-center">
+                  <div class="relative w-full h-96">
+                    <div class="absolute inset-0 rounded-full border-4 border-green-400 opacity-50"></div>
+                    <div class="absolute inset-4 rounded-full overflow-hidden">
+                      <img src="https://placehold.co/600x600/001220/ffffff?text=Global+Markets" class="w-full h-full object-cover" alt="Global Markets">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      new Splide('.splide', {
+        type: 'slide',
+        rewind: true,
+        autoplay: true,
+        interval: 5000,
+        pauseOnHover: false,
+        pagination: true,
+        arrows: false,
+        speed: 800,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)'
+      }).mount();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Select with Search</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.12.3/cdn.min.js" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+</head>
+<body class="bg-gray-100 p-8 flex justify-center items-center min-h-screen">
+<div class="w-full max-w-md">
+        <div x-data="{
+            open: false,
+            search: '',
+            loading: true,
+            error: null,
+            continents: [],
+            countries: [],
+            expandedContinent: null,
+            
+            async init() {
+                try {
+                    // Fetch continents
+                    const continentsResponse = await fetch('https://restcountries.com/v3.1/all?fields=region');
+                    const continentsData = await continentsResponse.json();
+                    
+                    // Extract unique continents
+                    const uniqueContinents = [...new Set(continentsData
+                        .map(country => country.region)
+                        .filter(region => region !== ''))];
+                    
+                    this.continents = uniqueContinents.map((name, index) => ({
+                        id: 'continent-' + index,
+                        name,
+                        type: 'continent',
+                        expanded: false
+                    }));
+                    
+                    // Fetch countries
+                    const countriesResponse = await fetch('https://restcountries.com/v3.1/all?fields=name,region,flag');
+                    const countriesData = await countriesResponse.json();
+                    
+                    // Process countries
+                    this.countries = countriesData.map((country, index) => ({
+                        id: 'country-' + index,
+                        name: country.name.common,
+                        continent: country.region,
+                        flag: country.flag,
+                        type: 'country',
+                        selected: false
+                    }));
+                    
+                    this.loading = false;
+                } catch (err) {
+                    console.error('Error fetching data:', err);
+                    this.error = 'Failed to load data. Please try again later.';
+                    this.loading = false;
+                }
+            },
+            
+            toggleContinent(continentName) {
+                this.expandedContinent = this.expandedContinent === continentName ? null : continentName;
+            },
+            
+            get filteredContinents() {
+                if (!this.search) return this.continents;
+                return this.continents.filter(continent => 
+                    continent.name.toLowerCase().includes(this.search.toLowerCase()) ||
+                    this.countriesByContinent(continent.name).some(country => 
+                        country.name.toLowerCase().includes(this.search.toLowerCase())
+                    )
+                );
+            },
+            
+            get filteredCountries() {
+                if (!this.search) return this.countries;
+                return this.countries.filter(country => 
+                    country.name.toLowerCase().includes(this.search.toLowerCase())
+                );
+            },
+            
+            countriesByContinent(continentName) {
+                return this.countries.filter(country => country.continent === continentName);
+            },
+            
+            get selectedCountries() {
+                return this.countries.filter(country => country.selected);
+            },
+            
+            toggleCountry(id) {
+                const country = this.countries.find(country => country.id === id);
+                if (country) {
+                    country.selected = !country.selected;
+                }
+            },
+            
+            removeCountry(id) {
+                const country = this.countries.find(country => country.id === id);
+                if (country) {
+                    country.selected = false;
+                }
+            },
+            
+            clearAll() {
+                this.countries.forEach(country => country.selected = false);
+            },
+            
+            isExpanded(continentName) {
+                return this.expandedContinent === continentName || 
+                       (this.search && this.countriesByContinent(continentName).some(country => 
+                           country.name.toLowerCase().includes(this.search.toLowerCase())
+                       ));
+            }
+        }" x-init="init()" class="relative">
+            <h2 class="text-xl font-bold mb-3 text-gray-800">Select Countries</h2>
+            
+            <!-- Selected Countries Display -->
+            <div @click="open = true" class="bg-white p-2 rounded-md border border-gray-300 flex flex-wrap min-h-12 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <template x-if="selectedCountries.length === 0">
+                    <div class="text-gray-400 p-1">Select countries...</div>
+                </template>
+                <template x-for="country in selectedCountries" :key="country.id">
+                    <div class="flex items-center bg-blue-100 rounded m-1 px-2 py-1">
+                        <span x-text="country.flag + ' ' + country.name" class="mr-1"></span>
+                        <button @click.stop="removeCountry(country.id)" class="text-blue-500 hover:text-blue-700 focus:outline-none">
+                            &times;
+                        </button>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Dropdown -->
+            <div x-show="open" 
+                 @click.away="open = false"
+                 class="absolute mt-1 w-full bg-white rounded-md shadow-lg border border-gray-300 z-10 max-h-96 overflow-auto">
+                <!-- Search Input -->
+                <div class="p-2 sticky top-0 bg-white border-b border-gray-200">
+                    <input 
+                        x-model="search"
+                        @click.stop
+                        @keydown.escape.window="open = false"
+                        type="text"
+                        placeholder="Search countries..."
+                        class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                </div>
+
+                <!-- Loading State -->
+                <div x-show="loading" class="p-4 text-center">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+                    <p class="mt-2 text-gray-600">Loading countries...</p>
+                </div>
+                
+                <!-- Error State -->
+                <div x-show="error" class="p-4 text-center text-red-500" x-text="error"></div>
+
+                <!-- Countries List Grouped by Continents -->
+                <div x-show="!loading && !error" class="py-1">
+                    <!-- When searching, show flat list of filtered countries -->
+                    <template x-if="search">
+                        <div>
+                            <template x-if="filteredCountries.length === 0">
+                                <div class="px-4 py-2 text-gray-500">No countries found</div>
+                            </template>
+                            <template x-for="country in filteredCountries" :key="country.id">
+                                <div 
+                                    @click.stop="toggleCountry(country.id)" 
+                                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center"
+                                    :class="{ 'bg-blue-50': country.selected }">
+                                    <input 
+                                        type="checkbox" 
+                                        :checked="country.selected" 
+                                        class="mr-2 rounded text-blue-500 focus:ring-blue-500"
+                                        @click.stop
+                                    >
+                                    <span x-text="country.flag + ' ' + country.name"></span>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    
+                    <!-- When not searching, show hierarchical view -->
+                    <template x-if="!search">
+                        <div>
+                            <template x-for="continent in continents" :key="continent.id">
+                                <div>
+                                    <!-- Continent Header -->
+                                    <div 
+                                        @click="toggleContinent(continent.name)"
+                                        class="px-3 py-2 font-medium bg-gray-50 border-b border-gray-200 flex justify-between items-center cursor-pointer hover:bg-gray-100">
+                                        <span x-text="continent.name"></span>
+                                        <svg class="w-5 h-5 text-gray-500 transition-transform duration-200" 
+                                             :class="{ 'transform rotate-180': isExpanded(continent.name) }"
+                                             fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                    
+                                    <!-- Countries in this continent -->
+                                    <div x-show="isExpanded(continent.name)" x-collapse>
+                                        <template x-for="country in countriesByContinent(continent.name)" :key="country.id">
+                                            <div 
+                                                @click.stop="toggleCountry(country.id)" 
+                                                class="px-4 py-2 pl-6 hover:bg-gray-100 cursor-pointer flex items-center"
+                                                :class="{ 'bg-blue-50': country.selected }">
+                                                <input 
+                                                    type="checkbox" 
+                                                    :checked="country.selected" 
+                                                    class="mr-2 rounded text-blue-500 focus:ring-blue-500"
+                                                    @click.stop
+                                                >
+                                                <span x-text="country.flag + ' ' + country.name"></span>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Clear All Button -->
+                <div class="p-2 border-t border-gray-200 sticky bottom-0 bg-white">
+                    <button 
+                        @click.stop="clearAll()"
+                        class="px-3 py-1 text-sm text-red-600 hover:text-red-800 focus:outline-none">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

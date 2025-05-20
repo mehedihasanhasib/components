@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Toast Notifications</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center gap-6 flex-col p-8">
+  
+  <!-- Toast container - all toasts will be added here -->
+  <div id="toast-container" class="fixed top-4 right-4 flex flex-col gap-4 z-50"></div>
+  
+  <!-- Demo form for custom messages -->
+  <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-lg font-semibold mb-4">Create Dynamic Toast</h2>
+    
+    <div class="mb-4">
+      <label class="block text-gray-700 mb-2" for="toast-type">Type:</label>
+      <select id="toast-type" class="w-full p-2 border border-gray-300 rounded">
+        <option value="success">Success</option>
+        <option value="error">Error</option>
+        <option value="info">Information</option>
+      </select>
+    </div>
+    
+    <div class="mb-4">
+      <label class="block text-gray-700 mb-2" for="toast-title">Title:</label>
+      <input type="text" id="toast-title" class="w-full p-2 border border-gray-300 rounded" 
+        placeholder="Enter toast title">
+    </div>
+    
+    <div class="mb-4">
+      <label class="block text-gray-700 mb-2" for="toast-message">Message:</label>
+      <textarea id="toast-message" class="w-full p-2 border border-gray-300 rounded" rows="2"
+        placeholder="Enter toast message"></textarea>
+    </div>
+    
+    <div class="mb-4">
+      <label class="block text-gray-700 mb-2" for="toast-duration">Duration (seconds):</label>
+      <input type="number" id="toast-duration" class="w-full p-2 border border-gray-300 rounded" 
+        value="5" min="1" max="10">
+    </div>
+    
+    <button 
+      onclick="createDynamicToast()"
+      class="w-full px-4 py-2 bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+    >
+      Show Toast
+    </button>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Toast counter for unique IDs
+    let toastCounter = 0;
+    
+    // Function to create and show dynamic toast
+    function createDynamicToast() {
+      const type = document.getElementById('toast-type').value;
+      const title = document.getElementById('toast-title').value || getDefaultTitle(type);
+      const message = document.getElementById('toast-message').value || getDefaultMessage(type);
+      const duration = document.getElementById('toast-duration').value * 1000 || 5000;
+      
+      // Create toast with dynamic content
+      showToast(type, title, message, duration);
+    }
+    
+    // Default titles based on type
+    function getDefaultTitle(type) {
+      switch(type) {
+        case 'success': return 'Success!';
+        case 'error': return 'Error!';
+        case 'info': return 'Information';
+        default: return 'Notification';
+      }
+    }
+    
+    // Default messages based on type
+    function getDefaultMessage(type) {
+      switch(type) {
+        case 'success': return 'Your changes have been saved successfully.';
+        case 'error': return 'An error occurred while processing your request.';
+        case 'info': return 'Here is some important information for you.';
+        default: return 'This is a notification message.';
+      }
+    }
+    
+    // Get icon name based on type
+    function getIconName(type) {
+      switch(type) {
+        case 'success': return 'check-circle';
+        case 'error': return 'alert-circle';
+        case 'info': return 'info';
+        default: return 'bell';
+      }
+    }
+    
+    // Get color classes based on type
+    function getColorClasses(type) {
+      switch(type) {
+        case 'success': return {
+          border: 'border-green-500',
+          bg: 'bg-green-100',
+          text: 'text-green-500'
+        };
+        case 'error': return {
+          border: 'border-red-500',
+          bg: 'bg-red-100',
+          text: 'text-red-500'
+        };
+        case 'info': return {
+          border: 'border-blue-500',
+          bg: 'bg-blue-100',
+          text: 'text-blue-500'
+        };
+        default: return {
+          border: 'border-gray-500',
+          bg: 'bg-gray-100',
+          text: 'text-gray-500'
+        };
+      }
+    }
+    
+    // Show toast with dynamic content
+    function showToast(type, title, message, duration = 5000) {
+      const toastId = `toast-${toastCounter++}`;
+      const colors = getColorClasses(type);
+      const iconName = getIconName(type);
+      
+      // Create toast element
+      const toastElement = document.createElement('div');
+      toastElement.id = toastId;
+      toastElement.className = `flex items-center w-full max-w-xs p-4 bg-white rounded-lg shadow-lg transition-all duration-300 border-l-4 ${colors.border} opacity-0 transform translate-x-full`;
+      
+      toastElement.innerHTML = `
+        <div class="inline-flex items-center justify-center flex-shrink-0 h-8 w-8 rounded-lg ${colors.bg} ${colors.text}">
+          <i data-lucide="${iconName}" class="h-5 w-5"></i>
+        </div>
+        <div class="ml-3 text-sm font-normal text-gray-700">
+          <span class="font-medium text-gray-900 block mb-1">${title}</span>
+          ${message}
+        </div>
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8" onclick="closeToast('${toastId}')">
+          <i data-lucide="x" class="h-5 w-5"></i>
+          <span class="sr-only">Close</span>
+        </button>
+      `;
+      
+      // Add toast to container
+      const container = document.getElementById('toast-container');
+      container.appendChild(toastElement);
+      
+      // Initialize icons in the new toast
+      lucide.createIcons({
+        attrs: {
+          'stroke-width': 2
+        },
+        element: toastElement
+      });
+      
+      // Show toast with animation
+      setTimeout(() => {
+        toastElement.classList.remove('opacity-0', 'translate-x-full');
+        toastElement.classList.add('opacity-100', 'translate-x-0');
+      }, 10);
+      
+      // Auto-close after duration
+      setTimeout(() => {
+        closeToast(toastId);
+      }, duration);
+    }
+    
+    // Close and remove toast
+    function closeToast(id) {
+      const toast = document.getElementById(id);
+      if (toast) {
+        toast.classList.remove('opacity-100', 'translate-x-0');
+        toast.classList.add('opacity-0', 'translate-x-full');
+        
+        // Remove from DOM after animation
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+          }
+        }, 300);
+      }
+    }
+  </script>
+</body>
+</html>
