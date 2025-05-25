@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Select with Search</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+    <style>
+        /* Tailwind CSS CDN */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css');
+    </style>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="w-full max-w-md mx-auto">
+        <h2 class="text-xl font-semibold mb-4 text-gray-800">Single Select with Search</h2>
+        
+        <div x-data="{
+            open: false,
+            search: '',
+            selectedOption: null,
+            options: [
+                { id: 1, name: 'Laravel' },
+                { id: 2, name: 'Vue.js' },
+                { id: 3, name: 'Alpine.js' },
+                { id: 4, name: 'Tailwind CSS' },
+                { id: 5, name: 'React' },
+                { id: 6, name: 'Angular' },
+                { id: 7, name: 'Svelte' },
+                { id: 8, name: 'Node.js' },
+                { id: 9, name: 'Express.js' },
+                { id: 10, name: 'TypeScript' }
+            ],
+            get filteredOptions() {
+                return this.options.filter(option => option.name.toLowerCase().includes(this.search.toLowerCase()));
+            },
+            selectOption(option) {
+                this.selectedOption = option;
+                this.open = false;
+                this.search = '';
+            },
+            clearSelection() {
+                this.selectedOption = null;
+            }
+        }" class="relative">
+            
+            <!-- Selected Option Display -->
+            <div @click="open = true" class="bg-white p-3 rounded-md border border-gray-300 flex items-center justify-between min-h-12 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-gray-400 transition-colors">
+                <div class="flex items-center flex-1">
+                    <template x-if="selectedOption === null">
+                        <span class="text-gray-400">Select an option...</span>
+                    </template>
+                    <template x-if="selectedOption !== null">
+                        <div class="flex items-center justify-between w-full">
+                            <span x-text="selectedOption.name" class="text-gray-700"></span>
+                            <button @click.stop="clearSelection()" class="text-gray-400 hover:text-gray-600 focus:outline-none ml-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </template>
+                </div>
+                <div class="ml-2">
+                    <svg class="w-5 h-5 text-gray-400 transition-transform duration-200" :class="{ 'rotate-180': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Dropdown -->
+            <div x-show="open" 
+                 x-transition:enter="transition ease-out duration-100"
+                 x-transition:enter-start="transform opacity-0 scale-95"
+                 x-transition:enter-end="transform opacity-100 scale-100"
+                 x-transition:leave="transition ease-in duration-75"
+                 x-transition:leave-start="transform opacity-100 scale-100"
+                 x-transition:leave-end="transform opacity-0 scale-95"
+                 @click.away="open = false"
+                 class="absolute mt-1 w-full bg-white rounded-md shadow-lg border border-gray-300 z-10 max-h-60 overflow-hidden">
+                
+                <!-- Search Input -->
+                <div class="p-3 sticky top-0 bg-white border-b border-gray-200">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input 
+                            x-model="search"
+                            @click.stop
+                            @keydown.escape.window="open = false"
+                            type="text"
+                            placeholder="Search options..."
+                            class="w-full pl-10 pr-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                    </div>
+                </div>
+
+                <!-- Options List -->
+                <div class="py-1 max-h-48 overflow-y-auto">
+                    <template x-if="filteredOptions.length === 0">
+                        <div class="px-4 py-3 text-gray-500 text-center">
+                            <div class="flex flex-col items-center">
+                                <svg class="w-8 h-8 text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.47.901-6.064 2.379l2.122 2.122z"></path>
+                                </svg>
+                                <span>No options found</span>
+                            </div>
+                        </div>
+                    </template>
+                    <template x-for="option in filteredOptions" :key="option.id">
+                        <div 
+                            @click.stop="selectOption(option)" 
+                            class="px-4 py-2 hover:bg-blue-50 cursor-pointer flex items-center transition-colors duration-150"
+                            :class="{ 'bg-blue-100 text-blue-700': selectedOption && selectedOption.id === option.id }">
+                            <span x-text="option.name" class="flex-1"></span>
+                            <template x-if="selectedOption && selectedOption.id === option.id">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Clear Selection Button -->
+                <template x-if="selectedOption !== null">
+                    <div class="p-2 border-t border-gray-200 bg-gray-50">
+                        <button 
+                            @click.stop="clearSelection(); open = false;"
+                            class="w-full px-3 py-2 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-red-500">
+                            Clear Selection
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Display Selected Value (for demo purposes) -->
+        <div class="mt-4 p-3 bg-gray-50 rounded-md" x-data x-show="$data.selectedOption">
+            <p class="text-sm text-gray-600">Selected:</p>
+            <p class="font-medium text-gray-800" x-text="$data.selectedOption ? $data.selectedOption.name : 'None'"></p>
+        </div>
+    </div>
+</body>
+</html>

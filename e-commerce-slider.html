@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-commerce Solutions Slider</title>
+  <!-- Import Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Import Alpine.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.13.3/cdn.min.js" defer></script>
+  <style>
+    .slide-overlay {
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0.1) 100%);
+    }
+
+    .content-panel {
+      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.5);
+      padding: 2rem;
+      border-radius: 0.5rem;
+    }
+
+    .divider {
+      height: 1px;
+      background-color: rgba(255, 255, 255, 0.2);
+      margin: 2rem 0;
+    }
+
+    .background-image {
+      transition: transform 0.8s ease-in-out;
+    }
+
+    .slide-container {
+      transform: translateX(0);
+      transition: transform 0.8s ease-in-out;
+    }
+
+    .content-section {
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100 flex justify-content items-center h-screen">
+  <div class="w-full" x-data="{
+    currentSlide: 0,
+    slides: [
+      {
+        image: 'https://placehold.co/1920x600/4A90E2/FFFFFF?text=E-commerce',
+        title: 'E-commerce',
+        description: 'Adapt to various payment scenarios for global e-commerce merchants, including DTC acquiring, SaaS Ecommerce integration, and platform collection.',
+        scenarios: ['E-commerce Platforms', 'DTC Merchants'],
+        advantages: ['Multiple Integration Methods', 'Integrated Payin and Payout', 'Customizable Risk Control']
+      },
+      {
+        image: 'https://placehold.co/1920x600/7B68EE/FFFFFF?text=Digital+Payments',
+        title: 'Digital Payments',
+        description: 'Enable secure and seamless digital payment experiences across multiple channels and regions with our comprehensive solutions.',
+        scenarios: ['Mobile Applications', 'Digital Wallets'],
+        advantages: ['Enhanced Security Features', 'Real-time Transaction Monitoring', 'Multi-currency Support']
+      },
+      {
+        image: 'https://placehold.co/1920x600/32CD32/FFFFFF?text=Cross-Border+Payments',
+        title: 'Cross-Border Payments',
+        description: 'Facilitate efficient international transactions with competitive exchange rates and localized payment methods.',
+        scenarios: ['Global Marketplaces', 'International Businesses'],
+        advantages: ['Local Payment Methods', 'Competitive FX Rates', 'Regulatory Compliance']
+      }
+    ],
+    nextSlide() {
+      this.currentSlide = (this.currentSlide + 1) % this.slides.length;
+    },
+    prevSlide() {
+      this.currentSlide = this.currentSlide === 0 ? this.slides.length - 1 : this.currentSlide - 1;
+    },
+    init() {
+      setInterval(() => {
+        this.nextSlide();
+      }, 6000);
+    }
+  }">
+
+    <section class="relative h-screen max-h-[800px] overflow-hidden">
+      <!-- Background Images -->
+      <div class="absolute inset-0 overflow-hidden">
+        <div class="flex h-full slide-container" :style="`transform: translateX(-${currentSlide * 100}%)`">
+          <template x-for="(slide, index) in slides" :key="index">
+            <img :src="slide.image" :alt="slide.title + ' background'" class="w-full h-full object-cover flex-shrink-0">
+          </template>
+        </div>
+      </div>
+
+      <!-- Fixed Overlay Content -->
+      <div class="slide-overlay absolute inset-0 flex items-center">
+        <div class="w-1/2 h-full flex items-center">
+          <div class="w-full text-white content-panel flex flex-col justify-center ml-6 md:ml-12">
+
+            <!-- Dynamic Content -->
+            <div class="content-section">
+              <h2 class="text-4xl md:text-5xl font-bold mb-4" x-text="slides[currentSlide].title"></h2>
+              <p class="text-gray-300 text-lg mb-8" x-text="slides[currentSlide].description"></p>
+
+              <div class="divider"></div>
+
+              <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">Scenarios</h3>
+                <ul class="space-y-2">
+                  <template x-for="scenario in slides[currentSlide].scenarios">
+                    <li class="flex items-start">
+                      <span class="text-blue-400 mr-2">•</span>
+                      <span x-text="scenario"></span>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="mb-8">
+                <h3 class="text-2xl font-semibold mb-4">Advantages</h3>
+                <ul class="space-y-2">
+                  <template x-for="advantage in slides[currentSlide].advantages">
+                    <li class="flex items-start">
+                      <span class="text-blue-400 mr-2">•</span>
+                      <span x-text="advantage"></span>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+
+              <!-- Navigation Controls -->
+              <div class="flex items-center mt-8">
+                <button @click="prevSlide()"
+                  class="mr-6 p-3 rounded-full border border-gray-500 hover:bg-gray-800 transition duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+
+                <a href="#"
+                  class="bg-blue-500 text-white px-8 py-3 rounded-full hover:bg-blue-600 transition duration-300">
+                  Explore More
+                </a>
+
+                <button @click="nextSlide()"
+                  class="ml-6 p-3 rounded-full border border-gray-500 hover:bg-gray-800 transition duration-300">
+                  <svg xmlns="http://www.w3.js/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+
+              <!-- Slide Indicators -->
+              <div class="flex space-x-2 mt-6">
+                <template x-for="(slide, index) in slides" :key="index">
+                  <button @click="currentSlide = index" class="w-3 h-3 rounded-full transition duration-300"
+                    :class="{ 'bg-blue-400': currentSlide === index, 'bg-gray-500': currentSlide !== index }"></button>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+  </div>
+</body>
+
+</html>
