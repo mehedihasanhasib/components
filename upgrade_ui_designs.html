@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative Upgrade UI Designs</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        
+        .design-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+        
+        .design-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1e293b;
+        }
+        
+        /* Design 1: Progress Ring */
+        .progress-ring {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+        }
+        
+        .progress-ring svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+        
+        .progress-ring-bg {
+            fill: none;
+            stroke: #e2e8f0;
+            stroke-width: 8;
+        }
+        
+        .progress-ring-fill {
+            fill: none;
+            stroke: url(#gradient1);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 283;
+            stroke-dashoffset: 113;
+            animation: progress-ring 2s ease-out;
+        }
+        
+        .progress-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .progress-percent {
+            font-size: 24px;
+            font-weight: 700;
+            color: #8b5cf6;
+        }
+        
+        @keyframes progress-ring {
+            from { stroke-dashoffset: 283; }
+            to { stroke-dashoffset: 113; }
+        }
+        
+        /* Design 2: Credit Cards */
+        .credit-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .credit-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+        
+        .card-chip {
+            width: 32px;
+            height: 24px;
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+        
+        /* Design 3: Rocket Animation */
+        .rocket-container {
+            position: relative;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .rocket {
+            font-size: 48px;
+            animation: rocket-bounce 2s ease-in-out infinite;
+        }
+        
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .star {
+            position: absolute;
+            color: white;
+            animation: twinkle 1.5s ease-in-out infinite alternate;
+        }
+        
+        .star:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .star:nth-child(2) { top: 30%; right: 25%; animation-delay: 0.5s; }
+        .star:nth-child(3) { bottom: 25%; left: 30%; animation-delay: 1s; }
+        
+        @keyframes rocket-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        /* Design 4: Feature Unlock */
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-locked {
+            opacity: 0.5;
+            position: relative;
+        }
+        
+        .lock-icon {
+            color: #ef4444;
+            margin-right: 8px;
+        }
+        
+        .unlock-icon {
+            color: #22c55e;
+            margin-right: 8px;
+        }
+        
+        /* Design 5: Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e2e8f0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -18px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #8b5cf6;
+        }
+        
+        .timeline-dot.completed {
+            background: #22c55e;
+        }
+        
+        .timeline-dot.current {
+            background: #f59e0b;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        /* Design 6: Gamification */
+        .level-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        
+        .xp-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .xp-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+            width: 75%;
+            animation: xp-fill 2s ease-out;
+        }
+        
+        @keyframes xp-fill {
+            from { width: 0%; }
+            to { width: 75%; }
+        }
+        
+        /* Common Button Styles */
+        .upgrade-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            justify-content: center;
+            margin-top: 16px;
+            width: 100%;
+        }
+        
+        .upgrade-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+        
+        .upgrade-btn.secondary {
+            background: white;
+            color: #8b5cf6;
+            border: 2px solid #8b5cf6;
+        }
+        
+        .upgrade-btn.secondary:hover {
+            background: #8b5cf6;
+            color: white;
+        }
+        
+        /* Notification styles */
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .pulsing-dot {
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+        }
+        
+        @keyframes pulse-dot {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; margin-bottom: 40px; color: #1e293b; font-size: 32px;">Creative Plan Upgrade UI Designs</h1>
+        
+        <div class="grid">
+            <!-- Design 1: Progress Ring with Limits -->
+            <div class="design-card">
+                <div class="design-title">📊 Usage Ring Progress</div>
+                <div class="progress-ring">
+                    <svg>
+                        <defs>
+                            <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#8b5cf6"/>
+                                <stop offset="100%" style="stop-color:#ec4899"/>
+                            </linearGradient>
+                        </defs>
+                        <circle class="progress-ring-bg" cx="60" cy="60" r="45"/>
+                        <circle class="progress-ring-fill" cx="60" cy="60" r="45"/>
+                    </svg>
+                    <div class="progress-center">
+                        <div class="progress-percent">85%</div>
+                        <div style="font-size: 12px; color: #64748b;">of limit</div>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #64748b; margin-bottom: 16px;">750/1000 contacts uploaded</p>
+                <div style="background: #fef3c7; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+                    <p style="color: #92400e; font-size: 14px; margin: 0;">⚠️ You're approaching your limit!</p>
+                </div>
+                <button class="upgrade-btn">
+                    <i data-lucide="zap"></i>
+                    Upgrade for Unlimited
+                </button>
+            </div>
+
+            <!-- Design 2: Credit Card Style -->
+            <div class="design-card">
+                <div class="design-title">💳 Premium Card</div>
+                <div class="credit-card">
+                    <div class="card-chip"></div>
+                    <div style="margin-bottom: 20px;">
+                        <div style="font-size: 14px; opacity: 0.8;">Current Plan</div>
+                        <div style="font-size: 24px; font-weight: 700;">FREE TIER</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-size: 12px; opacity: 0.8;">Valid Thru</div>
+                            <div style="font-size: 16px; font-weight: 600;">FOREVER</div>
+                        </div>
+                        <div style="font-size: 14px; opacity: 0.8;">**** **** **** FREE</div>
+                    </div>
+                </div>
+                <button class="upgrade-btn secondary" style="margin-top: 16px;">
+                    <i data-lucide="credit-card"></i>
+                    Get Premium Card
+                </button>
+            </div>
+
+            <!-- Design 3: Rocket Launch -->
+            <div class="design-card">
+                <div class="design-title">🚀 Launch to Success</div>
+                <div class="rocket-container">
+                    <div class="stars">
+                        <div class="star">✨</div>
+                        <div class="star">⭐</div>
+                        <div class="star">✨</div>
+                    </div>
+                    <div class="rocket">🚀</div>
+                </div>
+                <p style="text-align: center; margin: 16px 0; color: #64748b;">Ready to blast off to the next level?</p>
+                <button class="upgrade-btn">
+                    <i data-lucide="rocket"></i>
+                    Launch Pro Plan
+                </button>
+            </div>
+
+            <!-- Design 4: Feature Unlock List -->
+            <div class="design-card">
+                <div class="design-title">🔓 Unlock Features</div>
+                <ul class="feature-list">
+                    <li class="feature-item">
+                        <i data-lucide="check" class="unlock-icon"></i>
+                        <span>1,000 contacts</span>
+                    </li>
+                    <li class="feature-item">
+                        <i data-lucide="check" class="unlock-icon"></i>
+                        <span>Basic analytics</span>
+                    </li>
+                    <li class="feature-item feature-locked">
+                        <i data-lucide="lock" class="lock-icon"></i>
+                        <span>Unlimited contacts</span>
+                    </li>
+                    <li class="feature-item feature-locked">
+                        <i data-lucide="lock" class="lock-icon"></i>
+                        <span>Advanced analytics</span>
+                    </li>
+                    <li class="feature-item feature-locked">
+                        <i data-lucide="lock" class="lock-icon"></i>
+                        <span>API access</span>
+                    </li>
+                </ul>
+                <button class="upgrade-btn">
+                    <i data-lucide="key"></i>
+                    Unlock All Features
+                </button>
+            </div>
+
+            <!-- Design 5: Journey Timeline -->
+            <div class="design-card">
+                <div class="design-title">🗺️ Your Journey</div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot completed"></div>
+                        <div>
+                            <strong>Free Plan</strong>
+                            <div style="color: #64748b; font-size: 14px;">You are here</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot current"></div>
+                        <div>
+                            <strong>Pro Plan</strong>
+                            <div style="color: #64748b; font-size: 14px;">Next milestone</div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div>
+                            <strong>Enterprise</strong>
+                            <div style="color: #64748b; font-size: 14px;">Future goal</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="upgrade-btn">
+                    <i data-lucide="map"></i>
+                    Continue Journey
+                </button>
+            </div>
+
+            <!-- Design 6: Gamification XP -->
+            <div class="design-card">
+                <div class="design-title">🎮 Level Up</div>
+                <div class="level-badge">
+                    <i data-lucide="star"></i>
+                    Level 2 - Free User
+                </div>
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="font-size: 14px; color: #64748b;">XP Progress</span>
+                        <span style="font-size: 14px; font-weight: 600;">750/1000</span>
+                    </div>
+                    <div class="xp-bar">
+                        <div class="xp-fill"></div>
+                    </div>
+                    <p style="font-size: 14px; color: #64748b; margin-bottom: 16px;">250 XP to Level 3 - Pro User</p>
+                </div>
+                <div style="background: #f0f9ff; padding: 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid #3b82f6;">
+                    <p style="color: #1e40af; font-size: 14px; margin: 0;">💡 Skip the grind! Upgrade now and unlock Level 3 instantly</p>
+                </div>
+                <button class="upgrade-btn">
+                    <i data-lucide="zap"></i>
+                    Instant Level Up
+                </button>
+            </div>
+
+            <!-- Design 7: Notification Badge -->
+            <div class="design-card">
+                <div class="design-title">🔔 Smart Notifications</div>
+                <div style="position: relative; display: inline-block; margin-bottom: 16px;">
+                    <div style="width: 60px; height: 60px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+                        👤
+                    </div>
+                    <div class="notification-badge">3</div>
+                </div>
+                <p style="color: #64748b; margin-bottom: 16px;">You have 3 upgrade opportunities waiting!</p>
+                <div style="background: #ecfdf5; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 8px; color: #166534;">
+                        <div class="pulsing-dot"></div>
+                        <span style="font-size: 14px;">Limited time: 30% off Pro plan</span>
+                    </div>
+                </div>
+                <button class="upgrade-btn">
+                    <i data-lucide="bell"></i>
+                    Claim Offer Now
+                </button>
+            </div>
+
+            <!-- Design 8: Comparison Teaser -->
+            <div class="design-card">
+                <div class="design-title">⚡ Power Comparison</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                    <div style="text-align: center; padding: 16px; background: #f8fafc; border-radius: 8px;">
+                        <div style="font-size: 24px; margin-bottom: 8px;">🐌</div>
+                        <div style="font-weight: 600; color: #64748b;">FREE</div>
+                        <div style="font-size: 14px; color: #64748b;">Basic features</div>
+                    </div>
+                    <div style="text-align: center; padding: 16px; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: white; border-radius: 8px; position: relative;">
+                        <div style="position: absolute; top: -8px; right: -8px; background: #f59e0b; color: white; border-radius: 12px; padding: 4px 8px; font-size: 10px; font-weight: 600;">HOT</div>
+                        <div style="font-size: 24px; margin-bottom: 8px;">🚀</div>
+                        <div style="font-weight: 600;">PRO</div>
+                        <div style="font-size: 14px; opacity: 0.9;">10x faster</div>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #64748b; margin-bottom: 16px;">Why settle for basic when you can have super powers?</p>
+                <button class="upgrade-btn">
+                    <i data-lucide="flash"></i>
+                    Get Super Powers
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Add some interactive effects
+        document.querySelectorAll('.upgrade-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+                
+                // Show upgrade action
+                alert('Redirecting to upgrade page...');
+            });
+        });
+        
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to { transform: scale(2); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notify</title>
+</head>
+
+<body>
+    <button onclick="sendNotification()">Send Notification</button>
+
+    <script>
+        Notification.requestPermission();
+        function sendNotification() {
+            if (!('Notification' in window)) {
+                alert('This browser does not support notifications.');
+                return;
+            }
+
+            if (Notification.permission === 'granted') {
+                showNotification();
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        showNotification();
+                    } else {
+                        alert('Notification permission was denied.');
+                    }
+                });
+            } else {
+                alert('Notifications are denied.');
+            }
+        }
+
+        function showNotification() {
+            new Notification('Hello!', {
+                body: 'This is a browser notification.',
+                icon: 'https://via.placeholder.com/128' // Optional
+            });
+        }
+    </script>
+
+
+</body>
+
+</html>
