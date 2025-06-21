@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Zoom with Emerging Content</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .zoom-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            background: inherit;
+            animation: fadeOut 0.2s 1.3s forwards;
+        }
+
+        .zoom-text {
+            font-size: 1rem;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.8);
+            opacity: 1;
+            transform: scale(0);
+            letter-spacing: 2px;
+            text-align: center;
+            animation: zoomIn 2s 0.1s forwards;
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transform: scale(0);
+            animation: emergeContent 0.5s 2s forwards;
+        }
+
+        .hero-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 60px;
+            transform: scale(0);
+            opacity: 0;
+            animation: emergeHero 1s 2.5s forwards;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 400% 400%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 40px 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            color: white;
+            transform: scale(0);
+            opacity: 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-card:nth-child(1) {
+            animation: emergeCard 0.8s 3s forwards, floatCard 4s 4s infinite ease-in-out;
+        }
+
+        .content-card:nth-child(2) {
+            animation: emergeCard 0.8s 3.3s forwards, floatCard 4s 4.3s infinite ease-in-out;
+        }
+
+        .content-card:nth-child(3) {
+            animation: emergeCard 0.8s 3.6s forwards, floatCard 4s 4.6s infinite ease-in-out;
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .card-desc {
+            opacity: 0.85;
+            line-height: 1.7;
+            font-size: 1.1rem;
+        }
+
+        .floating-particles {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            opacity: 0;
+        }
+
+        .floating-particles:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation: floatParticle 1.5s 4s infinite ease-in-out, showParticle 1.5s 4s forwards;
+        }
+
+        .floating-particles:nth-child(2) {
+            top: 40%;
+            left: 85%;
+            animation: floatParticle 1.5s 4.2s infinite ease-in-out, showParticle 1.5s 4.2s forwards;
+        }
+
+        .floating-particles:nth-child(3) {
+            top: 70%;
+            left: 15%;
+            animation: floatParticle 1.5s 4.4s infinite ease-in-out, showParticle 1.5s 4.4s forwards;
+        }
+
+        .floating-particles:nth-child(4) {
+            top: 60%;
+            left: 80%;
+            animation: floatParticle 1.5s 4.6s infinite ease-in-out, showParticle 1.5s 4.6s forwards;
+        }
+
+        .floating-particles:nth-child(5) {
+            top: 30%;
+            left: 70%;
+            animation: floatParticle 1.5s 4.8s infinite ease-in-out, showParticle 1.5s 4.8s forwards;
+        }
+
+        /* Animation Keyframes */
+        @keyframes zoomIn {
+            0% {
+                transform: scale(0);
+            }
+            100% {
+                transform: scale(75);
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                display: none;
+            }
+        }
+
+        @keyframes emergeContent {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes emergeHero {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes emergeCard {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes floatCard {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes floatParticle {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes showParticle {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Zoom Text Container -->
+    <div class="zoom-container">
+        <div class="zoom-text">XENDEASY</div>
+    </div>
+
+    <!-- Main Content (emerges from text) -->
+    <div class="main-content">
+        <div class="hero-section">
+            <h1 class="hero-title">Amazing Experience</h1>
+            <p class="hero-subtitle">Where innovation meets creativity</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="content-card">
+                <span class="card-icon">🌟</span>
+                <h3 class="card-title">Innovation</h3>
+                <p class="card-desc">Pushing boundaries with cutting-edge technology and creative solutions that
+                    inspire.</p>
+            </div>
+            <div class="content-card">
+                <span class="card-icon">🚀</span>
+                <h3 class="card-title">Performance</h3>
+                <p class="card-desc">Lightning-fast experiences that deliver results beyond your expectations.</p>
+            </div>
+            <div class="content-card">
+                <span class="card-icon">✨</span>
+                <h3 class="card-title">Excellence</h3>
+                <p class="card-desc">Crafted with attention to detail and a commitment to quality in every aspect.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating particles -->
+    <div class="floating-particles"></div>
+    <div class="floating-particles"></div>
+    <div class="floating-particles"></div>
+    <div class="floating-particles"></div>
+    <div class="floating-particles"></div>
+</body>
+
+</html>

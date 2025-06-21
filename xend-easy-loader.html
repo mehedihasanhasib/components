@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Next Level Loading Animation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        /* ======================= ADVANCED LOADER ======================= */
+        .advanced-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            background: radial-gradient(ellipse at center, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            overflow: hidden;
+        }
+
+        /* Particle System */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            animation: floatParticles 4s infinite linear;
+            opacity: 0;
+        }
+
+        /* Dynamic Grid Background */
+        .grid-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridPulse 3s ease-in-out infinite;
+        }
+
+        /* Central Loading Elements */
+        .loader-core {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+
+        /* Morphing Logo */
+        .logo-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .logo-text {
+            font-size: 4rem;
+            font-weight: 900;
+            color: transparent;
+            background: linear-gradient(45deg, #00f5ff, #ff00ff, #ffff00, #00ff00);
+            background-size: 400% 400%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            animation: gradientShift 2s ease-in-out infinite, logoGlow 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.5));
+        }
+
+        /* Rotating Rings */
+        .rings-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .ring {
+            position: absolute;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 3s linear infinite;
+        }
+
+        .ring:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            border-top-color: #00f5ff;
+            border-right-color: #00f5ff;
+            animation-duration: 2s;
+            margin: -60px 0 0 -60px;
+        }
+
+        .ring:nth-child(2) {
+            width: 180px;
+            height: 180px;
+            border-bottom-color: #ff00ff;
+            border-left-color: #ff00ff;
+            animation-duration: 3s;
+            animation-direction: reverse;
+            margin: -90px 0 0 -90px;
+        }
+
+        .ring:nth-child(3) {
+            width: 240px;
+            height: 240px;
+            border-top-color: #ffff00;
+            border-bottom-color: #ffff00;
+            animation-duration: 4s;
+            margin: -120px 0 0 -120px;
+        }
+
+        /* Progress Elements */
+        .progress-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .progress-bar-container {
+            width: 300px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00f5ff, #ff00ff, #ffff00);
+            background-size: 200% 100%;
+            border-radius: 10px;
+            width: 0%;
+            animation: progressFill 3s ease-out forwards, progressShimmer 1.5s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.8);
+        }
+
+        .loading-text {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            animation: textPulse 2s ease-in-out infinite;
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+
+        /* Orbital Elements */
+        .orbital {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #00f5ff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #00f5ff;
+        }
+
+        .orbital:nth-child(1) {
+            animation: orbit1 4s linear infinite;
+        }
+
+        .orbital:nth-child(2) {
+            animation: orbit2 3s linear infinite;
+            background: #ff00ff;
+            box-shadow: 0 0 15px #ff00ff;
+        }
+
+        .orbital:nth-child(3) {
+            animation: orbit3 5s linear infinite;
+            background: #ffff00;
+            box-shadow: 0 0 15px #ffff00;
+        }
+
+        /* Glitch Effect */
+        .glitch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 255, 0.03) 2px,
+                rgba(0, 255, 255, 0.03) 4px
+            );
+            animation: glitchMove 0.1s infinite linear;
+            opacity: 0.5;
+        }
+
+        /* Main Content */
+        .main-content {
+            opacity: 0;
+            transform: scale(0.8) translateY(50px);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-content.loaded {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        .content-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            color: white;
+        }
+
+        /* Hide loader when complete */
+        .advanced-loader.hidden {
+            animation: loaderFadeOut 0.8s ease-in-out forwards;
+        }
+
+        /* ======================= ANIMATIONS ======================= */
+        @keyframes floatParticles {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes gridPulse {
+            0%, 100% {
+                opacity: 0.1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        @keyframes logoGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.5));
+                transform: scale(1);
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(255, 0, 255, 0.8));
+                transform: scale(1.02);
+            }
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes progressFill {
+            to {
+                width: 100%;
+            }
+        }
+
+        @keyframes progressShimmer {
+            0%, 100% {
+                background-position: -200% 0;
+            }
+            50% {
+                background-position: 200% 0;
+            }
+        }
+
+        @keyframes textPulse {
+            0%, 100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes dots {
+            0% { content: ''; }
+            25% { content: '.'; }
+            50% { content: '..'; }
+            75% { content: '...'; }
+            100% { content: ''; }
+        }
+
+        @keyframes orbit1 {
+            from {
+                transform: translate(-150px, 0) rotate(0deg) translate(150px, 0);
+            }
+            to {
+                transform: translate(-150px, 0) rotate(360deg) translate(150px, 0);
+            }
+        }
+
+        @keyframes orbit2 {
+            from {
+                transform: translate(-100px, 0) rotate(0deg) translate(100px, 0);
+            }
+            to {
+                transform: translate(-100px, 0) rotate(-360deg) translate(100px, 0);
+            }
+        }
+
+        @keyframes orbit3 {
+            from {
+                transform: translate(-200px, 0) rotate(0deg) translate(200px, 0);
+            }
+            to {
+                transform: translate(-200px, 0) rotate(360deg) translate(200px, 0);
+            }
+        }
+
+        @keyframes glitchMove {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(10px);
+            }
+        }
+
+        @keyframes loaderFadeOut {
+            to {
+                opacity: 0;
+                visibility: hidden;
+                transform: scale(0.8);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .logo-text {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+            
+            .progress-bar-container {
+                width: 250px;
+            }
+            
+            .ring:nth-child(1) {
+                width: 80px;
+                height: 80px;
+                margin: -40px 0 0 -40px;
+            }
+            
+            .ring:nth-child(2) {
+                width: 120px;
+                height: 120px;
+                margin: -60px 0 0 -60px;
+            }
+            
+            .ring:nth-child(3) {
+                width: 160px;
+                height: 160px;
+                margin: -80px 0 0 -80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Advanced Loader -->
+    <div id="advancedLoader" class="advanced-loader">
+        <!-- Animated Background -->
+        <div class="grid-bg"></div>
+        <div class="glitch-overlay"></div>
+        
+        <!-- Particle System -->
+        <div class="particles" id="particles"></div>
+        
+        <!-- Main Loader Content -->
+        <div class="loader-core">
+            <!-- Logo with Morphing Effect -->
+            <div class="logo-container">
+                <div class="logo-text" id="logoText">XENDEASY</div>
+                
+                <!-- Rotating Rings -->
+                <div class="rings-container">
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                </div>
+                
+                <!-- Orbital Elements -->
+                <div class="orbital"></div>
+                <div class="orbital"></div>
+                <div class="orbital"></div>
+            </div>
+            
+            <!-- Progress Section -->
+            <div class="progress-section">
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="loading-text">
+                    Loading<span class="loading-dots"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <div class="content-box">
+            <h1>Welcome to XENDEASY</h1>
+            <p>Experience the next level of web design</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create particle system
+            function createParticles() {
+                const particlesContainer = document.getElementById('particles');
+                const particleCount = 50;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 4 + 's';
+                    particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    particlesContainer.appendChild(particle);
+                }
+            }
+
+            // Enhanced loading sequence
+            function startLoadingSequence() {
+                const loader = document.getElementById('advancedLoader');
+                const mainContent = document.getElementById('mainContent');
+                const logoText = document.getElementById('logoText');
+                
+                // Create particles
+                createParticles();
+                
+                // Simulate loading progress
+                let progress = 0;
+                const progressBar = document.getElementById('progressBar');
+                
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 15;
+                    if (progress > 100) progress = 100;
+                    
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        
+                        // Complete loading sequence
+                        setTimeout(() => {
+                            loader.classList.add('hidden');
+                            mainContent.classList.add('loaded');
+                        }, 500);
+                    }
+                }, 150);
+                
+                // Logo text morphing effect
+                const texts = ['XENDEASY', 'LOADING', 'XENDEASY'];
+                let textIndex = 0;
+                
+                setInterval(() => {
+                    logoText.style.transform = 'scale(0.8)';
+                    logoText.style.opacity = '0.5';
+                    
+                    setTimeout(() => {
+                        textIndex = (textIndex + 1) % texts.length;
+                        logoText.textContent = texts[textIndex];
+                        logoText.style.transform = 'scale(1)';
+                        logoText.style.opacity = '1';
+                    }, 300);
+                }, 2000);
+            }
+
+            // Start the loading sequence
+            startLoadingSequence();
+            
+            // Add dynamic color changes
+            setInterval(() => {
+                const hue = Math.random() * 360;
+                document.documentElement.style.setProperty('--dynamic-color', `hsl(${hue}, 80%, 60%)`);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

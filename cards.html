@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Payment Methods</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .payment-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .payment-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.3);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 1) 100%);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .payment-image {
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-card:hover .payment-image {
+            transform: scale(1.05);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .payment-title {
+            background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        .container-bg {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f1f5f9' fill-opacity='0.4'%3E%3Ccircle cx='7' cy='7' r='2'/%3E%3Ccircle cx='53' cy='53' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-1 {
+            animation-delay: 0.1s;
+        }
+
+        .stagger-2 {
+            animation-delay: 0.2s;
+        }
+
+        .stagger-3 {
+            animation-delay: 0.3s;
+        }
+
+        .stagger-4 {
+            animation-delay: 0.4s;
+        }
+
+        .stagger-5 {
+            animation-delay: 0.5s;
+        }
+
+        .stagger-6 {
+            animation-delay: 0.6s;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen container-bg">
+    <div class="max-w-7xl mx-auto px-6 py-12" x-data="paymentMethods()">
+        <!-- Main Container -->
+        <div class="relative z-10">
+            <!-- Header -->
+            <div class="text-center mb-16 fade-in">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Payment Methods</h1>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Choose from our comprehensive selection of secure
+                    payment options available worldwide</p>
+            </div>
+
+            <!-- Payment Methods Sections -->
+            <template x-for="(paymentMethod, methodIndex) in content.cards[0].paymentMethods.options"
+                :key="'method-' + methodIndex">
+                <div class="mb-20 fade-in" :class="'stagger-' + (methodIndex + 1)">
+                    <!-- Debug Info (Hidden in production) -->
+                    <!-- <div class="mb-4 p-3 bg-gray-100 rounded text-xs text-gray-600" x-show="false">
+                        <span x-text="JSON.stringify(paymentMethod, null, 2)"></span>
+                    </div> -->
+
+                    <!-- Section Header -->
+                    <div class="text-center mb-12">
+                        <h2 x-text="paymentMethod.label" class="text-3xl font-bold section-header inline-block mb-6">
+                        </h2>
+                        <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full"></div>
+                    </div>
+
+                    <!-- Cards Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        <template
+                            x-for="(card, cardIndex) in content.cards.filter(card => card.paymentMethods.value === paymentMethod.value)"
+                            :key="'card-' + methodIndex + '-' + cardIndex">
+                            <div class="payment-card group p-6 rounded-2xl cursor-pointer"
+                                :class="'fade-in stagger-' + ((cardIndex % 6) + 1)">
+                                <!-- Card Image -->
+                                <div class="flex justify-center mb-6">
+                                    <div class="relative">
+                                        <div
+                                            class="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-500 rounded-xl blur opacity-20 group-hover:opacity-30 transition-opacity">
+                                        </div>
+                                        <img class="payment-image relative w-16 h-16 rounded-xl object-cover border-2 border-white"
+                                            :src="card.image.preview" :alt="card.title.value">
+                                    </div>
+                                </div>
+
+                                <!-- Card Content -->
+                                <div class="text-center">
+                                    <h3 x-text="card.title.value" class="payment-title text-lg font-semibold mb-2">
+                                    </h3>
+
+                                    <!-- Additional Info (if available) -->
+                                    <div class="text-sm text-gray-500 mb-4" x-show="card.region">
+                                        <span
+                                            class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100 text-gray-600">
+                                            <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd"
+                                                    d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                            <span x-text="card.region || 'Global'"></span>
+                                        </span>
+                                    </div>
+
+                                    <!-- Status Indicator -->
+                                    <div class="flex justify-center items-center space-x-2">
+                                        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                                        <span class="text-xs text-green-600 font-medium">Available</span>
+                                    </div>
+                                </div>
+
+                                <!-- Hover Effect Overlay -->
+                                <div
+                                    class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 opacity-0 group-hover:opacity-5 transition-opacity pointer-events-none">
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Empty State -->
+            <div x-show="!content.cards[0].paymentMethods.options.length" class="text-center py-20">
+                <div class="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">No Payment Methods Available</h3>
+                <p class="text-gray-600">Please check back later or contact support.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function paymentMethods() {
+            return {
+                // Sample data structure - replace with your actual data
+                content: {
+                    cards: [{
+                        paymentMethods: {
+                            options: [
+                                {
+                                    label: "Credit & Debit Cards",
+                                    value: "cards"
+                                },
+                                {
+                                    label: "Digital Wallets",
+                                    value: "wallets"
+                                },
+                                {
+                                    label: "Bank Transfers",
+                                    value: "banking"
+                                }
+                            ]
+                        }
+                    }]
+                },
+                cards: [
+                    {
+                        title: { value: "Visa" },
+                        image: { preview: "https://via.placeholder.com/64x64/1a1f71/ffffff?text=VISA" },
+                        paymentMethods: { value: "cards" },
+                        region: "Global"
+                    },
+                    {
+                        title: { value: "Mastercard" },
+                        image: { preview: "https://via.placeholder.com/64x64/eb001b/ffffff?text=MC" },
+                        paymentMethods: { value: "cards" },
+                        region: "Global"
+                    },
+                    {
+                        title: { value: "American Express" },
+                        image: { preview: "https://via.placeholder.com/64x64/006fcf/ffffff?text=AMEX" },
+                        paymentMethods: { value: "cards" },
+                        region: "Global"
+                    },
+                    {
+                        title: { value: "PayPal" },
+                        image: { preview: "https://via.placeholder.com/64x64/003087/ffffff?text=PP" },
+                        paymentMethods: { value: "wallets" },
+                        region: "Global"
+                    },
+                    {
+                        title: { value: "Apple Pay" },
+                        image: { preview: "https://via.placeholder.com/64x64/000000/ffffff?text=Pay" },
+                        paymentMethods: { value: "wallets" },
+                        region: "Global"
+                    },
+                    {
+                        title: { value: "Google Pay" },
+                        image: { preview: "https://via.placeholder.com/64x64/4285f4/ffffff?text=G" },
+                        paymentMethods: { value: "wallets" },
+                        region: "Global"
+                    },
+                    {
+                        title: { value: "Bank Transfer" },
+                        image: { preview: "https://via.placeholder.com/64x64/059669/ffffff?text=BANK" },
+                        paymentMethods: { value: "banking" },
+                        region: "EU"
+                    },
+                    {
+                        title: { value: "SEPA" },
+                        image: { preview: "https://via.placeholder.com/64x64/003d7a/ffffff?text=SEPA" },
+                        paymentMethods: { value: "banking" },
+                        region: "Europe"
+                    }
+                ]
+            }
+        }
+    </script>
+</body>
+
+</html>
